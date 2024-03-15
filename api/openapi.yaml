@@ -1,0 +1,3141 @@
+openapi: 3.0.1
+info:
+  description: "Open-source Reverse ETL that makes data segmentation, sync and activation\
+    \ both easy and fully secure."
+  title: MultiWoven API
+  version: 1.0.0
+servers:
+- url: https://api.multiwoven.com
+tags:
+- name: Connectors
+- name: Syncs
+- name: Models
+- name: Connector Definitions
+- name: Reports
+- name: SyncRuns
+- name: SyncRecords
+paths:
+  /api/v1/models:
+    get:
+      operationId: Models_listAllModels
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ModelsListAllModelsResponse'
+          description: Successful operation
+      security:
+      - bearerAuth: []
+      summary: Lists all models
+      tags:
+      - Models
+      x-konfig-operation-can-have-single-parameter: true
+      x-konfig-single-parameter-schema: konfig-generated-schema-single-parameter-schema-get--api-v1-models
+      x-accepts: application/json
+    post:
+      operationId: Models_createModel
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ModelsCreateModelRequest'
+      responses:
+        "201":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ModelsCreateModelResponse'
+          description: Model created
+      security:
+      - bearerAuth: []
+      summary: Creates a model
+      tags:
+      - Models
+      x-konfig-operation-can-have-single-parameter: true
+      x-konfig-single-parameter-schema: konfig-generated-schema-single-parameter-schema-post--api-v1-models
+      x-content-type: application/json
+      x-accepts: application/json
+  /api/v1/models/{id}:
+    delete:
+      operationId: Models_deleteModel
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: integer
+        style: simple
+      responses:
+        "204":
+          description: Model deleted
+      security:
+      - bearerAuth: []
+      summary: Deletes a model
+      tags:
+      - Models
+      x-konfig-operation-can-have-single-parameter: true
+      x-konfig-single-parameter-schema: konfig-generated-schema-single-parameter-schema-delete--api-v1-models-id
+      x-accepts: application/json
+    get:
+      operationId: Models_getById
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: integer
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ModelsGetByIdResponse'
+          description: Successful operation
+      security:
+      - bearerAuth: []
+      summary: Retrieves a model
+      tags:
+      - Models
+      x-konfig-operation-can-have-single-parameter: true
+      x-konfig-single-parameter-schema: konfig-generated-schema-single-parameter-schema-get--api-v1-models-id
+      x-accepts: application/json
+    put:
+      operationId: Models_updateModelById
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: integer
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ModelsUpdateModelByIdRequest'
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ModelsUpdateModelByIdResponse'
+          description: Model updated
+      security:
+      - bearerAuth: []
+      summary: Updates a model
+      tags:
+      - Models
+      x-konfig-operation-can-have-single-parameter: true
+      x-konfig-single-parameter-schema: konfig-generated-schema-single-parameter-schema-put--api-v1-models-id
+      x-content-type: application/json
+      x-accepts: application/json
+  /api/v1/connector_definitions:
+    get:
+      operationId: ConnectorDefinitions_getBasedOnType
+      parameters:
+      - description: Type of the connector (source or destination)
+        explode: true
+        in: query
+        name: type
+        required: true
+        schema:
+          enum:
+          - source
+          - destination
+          type: string
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConnectorDefinitionsGetBasedOnTypeResponse'
+          description: Successful response
+      security:
+      - bearerAuth: []
+      summary: Retrieve connector definitions based on type
+      tags:
+      - Connector Definitions
+      x-konfig-operation-can-have-single-parameter: true
+      x-konfig-single-parameter-schema: konfig-generated-schema-single-parameter-schema-get--api-v1-connector_definitions
+      x-accepts: application/json
+  /api/v1/connector_definitions/{connector_name}:
+    get:
+      operationId: ConnectorDefinitions_getByName
+      parameters:
+      - description: Name of the connector
+        explode: false
+        in: path
+        name: connector_name
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: Type of the connector (source or destination)
+        explode: true
+        in: query
+        name: type
+        required: true
+        schema:
+          enum:
+          - source
+          - destination
+          type: string
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConnectorDefinitionsGetByNameResponse'
+          description: Successful response
+      security:
+      - bearerAuth: []
+      summary: Retrieve specific connector definition based on its name
+      tags:
+      - Connector Definitions
+      x-konfig-operation-can-have-single-parameter: true
+      x-konfig-single-parameter-schema: konfig-generated-schema-single-parameter-schema-get--api-v1-connector_definitions-connector_name
+      x-accepts: application/json
+  /api/v1/connector_definitions/check_connection:
+    post:
+      operationId: ConnectorDefinitions_checkConnection
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ConnectorDefinitionsCheckConnectionRequest'
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConnectorDefinitionsCheckConnectionResponse'
+          description: Connection check successful
+      security:
+      - bearerAuth: []
+      summary: Checks the connection for a specified connector definition
+      tags:
+      - Connector Definitions
+      x-konfig-operation-can-have-single-parameter: true
+      x-konfig-single-parameter-schema: konfig-generated-schema-single-parameter-schema-post--api-v1-connector_definitions-check_connection
+      x-content-type: application/json
+      x-accepts: application/json
+  /api/v1/connectors:
+    get:
+      operationId: Connectors_listAll
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConnectorsListAllResponse'
+          description: A list of connectors
+      security:
+      - bearerAuth: []
+      summary: Lists all connectors
+      tags:
+      - Connectors
+      x-konfig-operation-can-have-single-parameter: true
+      x-konfig-single-parameter-schema: konfig-generated-schema-single-parameter-schema-get--api-v1-connectors
+      x-accepts: application/json
+    post:
+      operationId: Connectors_createNewConnector
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ConnectorsCreateNewConnectorRequest'
+        required: true
+      responses:
+        "201":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConnectorsCreateNewConnectorResponse'
+          description: Connector created
+      security:
+      - bearerAuth: []
+      summary: Creates a connector
+      tags:
+      - Connectors
+      x-konfig-operation-can-have-single-parameter: true
+      x-konfig-single-parameter-schema: konfig-generated-schema-single-parameter-schema-post--api-v1-connectors
+      x-content-type: application/json
+      x-accepts: application/json
+  /api/v1/connectors/{id}:
+    delete:
+      operationId: Connectors_deleteById
+      parameters:
+      - description: Unique ID of the connector
+        explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "204":
+          description: "No content, indicating successful deletion"
+      security:
+      - bearerAuth: []
+      summary: Deletes a specific connector by ID
+      tags:
+      - Connectors
+      x-konfig-operation-can-have-single-parameter: true
+      x-konfig-single-parameter-schema: konfig-generated-schema-single-parameter-schema-delete--api-v1-connectors-id
+      x-accepts: application/json
+    get:
+      operationId: Connectors_getById
+      parameters:
+      - description: Unique ID of the connector
+        explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConnectorsGetByIdResponse'
+          description: A single connector object
+      security:
+      - bearerAuth: []
+      summary: Retrieves a specific connector by ID
+      tags:
+      - Connectors
+      x-konfig-operation-can-have-single-parameter: true
+      x-konfig-single-parameter-schema: konfig-generated-schema-single-parameter-schema-get--api-v1-connectors-id
+      x-accepts: application/json
+    put:
+      operationId: Connectors_updateById
+      parameters:
+      - description: Unique ID of the connector
+        explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ConnectorsUpdateByIdRequest'
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConnectorsUpdateByIdResponse'
+          description: Connector updated successfully
+      security:
+      - bearerAuth: []
+      summary: Updates a specific connector by ID
+      tags:
+      - Connectors
+      x-konfig-operation-can-have-single-parameter: true
+      x-konfig-single-parameter-schema: konfig-generated-schema-single-parameter-schema-put--api-v1-connectors-id
+      x-content-type: application/json
+      x-accepts: application/json
+  /api/v1/connectors/{id}/discover:
+    get:
+      operationId: Connectors_discoverCatalogInfo
+      parameters:
+      - description: Unique ID of the connector
+        explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConnectorsDiscoverCatalogInfoResponse'
+          description: Catalog information for the connector
+      security:
+      - bearerAuth: []
+      summary: Discovers catalog information for a specified connector
+      tags:
+      - Connectors
+      x-konfig-operation-can-have-single-parameter: true
+      x-konfig-single-parameter-schema: konfig-generated-schema-single-parameter-schema-get--api-v1-connectors-id-discover
+      x-accepts: application/json
+  /api/v1/connectors/{id}/query_source:
+    post:
+      operationId: Connectors_querySource
+      parameters:
+      - description: The ID of the connector to query
+        explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: integer
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ConnectorsQuerySourceRequest'
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConnectorsQuerySourceResponse'
+          description: An array of generic JSON objects representing the preview data.
+      security:
+      - bearerAuth: []
+      summary: Query your source data
+      tags:
+      - Connectors
+      x-konfig-operation-can-have-single-parameter: true
+      x-konfig-single-parameter-schema: konfig-generated-schema-single-parameter-schema-post--api-v1-connectors-id-query_source
+      x-content-type: application/json
+      x-accepts: application/json
+  /api/v1/syncs:
+    get:
+      operationId: Syncs_listOperations
+      parameters:
+      - description: Page number for pagination
+        explode: true
+        in: query
+        name: "page[number]"
+        required: false
+        schema:
+          type: integer
+        style: form
+      - description: Number of items per page for pagination
+        explode: true
+        in: query
+        name: "page[size]"
+        required: false
+        schema:
+          type: integer
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SyncsListOperationsResponse'
+          description: A list of sync operations
+      security:
+      - bearerAuth: []
+      summary: List all sync operations
+      tags:
+      - Syncs
+      x-konfig-operation-can-have-single-parameter: true
+      x-konfig-single-parameter-schema: konfig-generated-schema-single-parameter-schema-get--api-v1-syncs
+      x-accepts: application/json
+    post:
+      operationId: Syncs_createNewSyncOperation
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SyncsCreateNewSyncOperationRequest'
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SyncsCreateNewSyncOperationResponse'
+          description: Sync operation created successfully
+      security:
+      - bearerAuth: []
+      summary: Create a new sync operation
+      tags:
+      - Syncs
+      x-konfig-operation-can-have-single-parameter: true
+      x-konfig-single-parameter-schema: konfig-generated-schema-single-parameter-schema-post--api-v1-syncs
+      x-content-type: application/json
+      x-accepts: application/json
+  /api/v1/syncs/{id}:
+    delete:
+      operationId: Syncs_deleteSyncOperation
+      parameters:
+      - description: The ID of the sync operation to delete
+        explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "204":
+          description: "No content, indicating the sync operation was successfully\
+            \ deleted"
+      security:
+      - bearerAuth: []
+      summary: Delete a specific sync operation
+      tags:
+      - Syncs
+      x-konfig-operation-can-have-single-parameter: true
+      x-konfig-single-parameter-schema: konfig-generated-schema-single-parameter-schema-delete--api-v1-syncs-id
+      x-accepts: application/json
+    get:
+      operationId: Syncs_showDetails
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SyncsShowDetailsResponse'
+          description: Sync details retrieved successfully
+      security:
+      - bearerAuth: []
+      summary: Show details of a specific sync operation
+      tags:
+      - Syncs
+      x-konfig-operation-can-have-single-parameter: true
+      x-konfig-single-parameter-schema: konfig-generated-schema-single-parameter-schema-get--api-v1-syncs-id
+      x-accepts: application/json
+    put:
+      operationId: Syncs_updateSpecificSync
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SyncsUpdateSpecificSyncRequest'
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SyncsUpdateSpecificSyncResponse'
+          description: Sync operation updated successfully
+      security:
+      - bearerAuth: []
+      summary: Update a specific sync operation
+      tags:
+      - Syncs
+      x-konfig-operation-can-have-single-parameter: true
+      x-konfig-single-parameter-schema: konfig-generated-schema-single-parameter-schema-put--api-v1-syncs-id
+      x-content-type: application/json
+      x-accepts: application/json
+  /api/v1/syncs/configurations:
+    get:
+      operationId: Syncs_getReportData
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SyncsGetReportDataResponse'
+          description: Successfully retrieved report data.
+      summary: Get report data based on given type
+      tags:
+      - Syncs
+      x-konfig-operation-can-have-single-parameter: true
+      x-konfig-single-parameter-schema: konfig-generated-schema-single-parameter-schema-get--api-v1-syncs-configurations
+      x-accepts: application/json
+  /api/v1/reports:
+    get:
+      operationId: Reports_getDataBasedOnType
+      parameters:
+      - description: Type of the report to query.
+        explode: true
+        in: query
+        name: type
+        required: true
+        schema:
+          enum:
+          - workspace_activity
+          type: string
+        style: form
+      - description: Specific metric of interest in the report.
+        explode: true
+        in: query
+        name: metric
+        required: false
+        schema:
+          enum:
+          - sync_run_triggered
+          - total_sync_run_rows
+          - all
+          type: string
+        style: form
+      - description: IDs of the connectors.
+        explode: true
+        in: query
+        name: connector_ids
+        required: false
+        schema:
+          items:
+            type: integer
+          type: array
+        style: form
+      - description: Time period for the report.
+        explode: true
+        in: query
+        name: time_period
+        required: false
+        schema:
+          enum:
+          - one_week
+          - one_day
+          type: string
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReportsGetDataBasedOnTypeResponse'
+          description: Successfully retrieved report data.
+        "400":
+          description: Validation error occurred.
+      summary: Get report data based on given type
+      tags:
+      - Reports
+      x-konfig-operation-can-have-single-parameter: true
+      x-konfig-single-parameter-schema: konfig-generated-schema-single-parameter-schema-get--api-v1-reports
+      x-accepts: application/json
+  /api/v1/syncs/{sync_id}/sync_runs:
+    get:
+      description: "Retrieves a list of sync runs for a specific sync, optionally\
+        \ filtered by status."
+      operationId: SyncRuns_listBySyncId
+      parameters:
+      - description: The ID of the sync to list runs for.
+        explode: false
+        in: path
+        name: sync_id
+        required: true
+        schema:
+          type: integer
+        style: simple
+      - description: Optional status to filter the sync runs by.
+        explode: true
+        in: query
+        name: status
+        required: false
+        schema:
+          type: string
+        style: form
+      - description: Page number for pagination.
+        explode: true
+        in: query
+        name: page
+        required: false
+        schema:
+          type: integer
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SyncRunsListBySyncIdResponse'
+          description: A JSON array of sync runs
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SyncRunsListBySyncId404Response'
+          description: Sync not found
+          x-do-not-generate: true
+      summary: List sync runs for a specific sync
+      tags:
+      - SyncRuns
+      x-konfig-operation-can-have-single-parameter: true
+      x-konfig-single-parameter-schema: konfig-generated-schema-single-parameter-schema-get--api-v1-syncs-sync_id-sync_runs
+      x-accepts: application/json
+  /api/v1/syncs/{sync_id}/sync_runs/{sync_run_id}/sync_records:
+    get:
+      description: "Retrieves a list of sync records for a specific sync run, optionally\
+        \ filtered by status."
+      operationId: SyncRecords_listForSyncRun
+      parameters:
+      - description: The ID of the sync to list records for.
+        explode: false
+        in: path
+        name: sync_id
+        required: true
+        schema:
+          type: integer
+        style: simple
+      - description: The ID of the sync run to list records for.
+        explode: false
+        in: path
+        name: sync_run_id
+        required: true
+        schema:
+          type: integer
+        style: simple
+      - description: Optional status to filter the sync records by.
+        explode: true
+        in: query
+        name: status
+        required: false
+        schema:
+          type: string
+        style: form
+      - description: Page number for pagination.
+        explode: true
+        in: query
+        name: page
+        required: false
+        schema:
+          type: integer
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SyncRecordsListForSyncRunResponse'
+          description: A JSON array of sync records
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SyncRecordsListForSyncRun404Response'
+          description: SyncRun not found
+          x-do-not-generate: true
+      summary: List sync records for a specific sync run
+      tags:
+      - SyncRecords
+      x-konfig-operation-can-have-single-parameter: true
+      x-konfig-single-parameter-schema: konfig-generated-schema-single-parameter-schema-get--api-v1-syncs-sync_id-sync_runs-sync_run_id-sync_records
+      x-accepts: application/json
+components:
+  schemas:
+    ModelsCreateModelRequest:
+      example:
+        model:
+          query: query
+          name: name
+          connector_id: 0
+          description: description
+          query_type: query_type
+          primary_key: primary_key
+      properties:
+        model:
+          $ref: '#/components/schemas/ModelsCreateModelRequest_model'
+      type: object
+    ModelsUpdateModelByIdRequest:
+      example:
+        model:
+          query: query
+          name: name
+          connector_id: 0
+          description: description
+          query_type: query_type
+          primary_key: primary_key
+      properties:
+        model:
+          $ref: '#/components/schemas/ModelsCreateModelRequest_model'
+      type: object
+    ConnectorDefinitionsCheckConnectionRequest:
+      example:
+        connection_spec:
+          key: ""
+        name: name
+        type: source
+      properties:
+        type:
+          enum:
+          - source
+          - destination
+          type: string
+        name:
+          type: string
+        connection_spec:
+          additionalProperties: true
+          description: Generic connection specification structure. Specifics depend
+            on the connector type.
+          type: object
+      type: object
+    ConnectorsCreateNewConnectorRequest:
+      example:
+        connector:
+          configuration:
+            key: ""
+          name: name
+          connector_type: source
+          connector_name: connector_name
+      properties:
+        connector:
+          $ref: '#/components/schemas/ConnectorsCreateNewConnectorRequest_connector'
+      type: object
+    ConnectorsUpdateByIdRequest:
+      example:
+        connector:
+          configuration:
+            key: ""
+          name: name
+          connector_type: source
+          connector_name: connector_name
+      properties:
+        connector:
+          $ref: '#/components/schemas/ConnectorsUpdateByIdRequest_connector'
+      type: object
+    ConnectorsQuerySourceRequest:
+      example:
+        query: query
+      properties:
+        query:
+          description: SQL query to be executed
+          type: string
+      type: object
+    SyncsCreateNewSyncOperationRequest:
+      example:
+        sync:
+          sync_mode: full_refresh
+          schedule_type: automated
+          stream_name: stream_name
+          configuration:
+            key: ""
+          destination_id: 6
+          sync_interval_unit: minutes
+          sync_interval: 5
+          source_id: 0
+          model_id: 1
+      properties:
+        sync:
+          $ref: '#/components/schemas/SyncsCreateNewSyncOperationRequest_sync'
+      type: object
+    SyncsUpdateSpecificSyncRequest:
+      example:
+        sync:
+          sync_mode: sync_mode
+          schedule_type: schedule_type
+          stream_name: stream_name
+          configuration:
+            key: ""
+          destination_id: 6
+          sync_interval_unit: sync_interval_unit
+          sync_interval: 5
+          source_id: 0
+          model_id: 1
+      properties:
+        sync:
+          $ref: '#/components/schemas/SyncsUpdateSpecificSyncRequest_sync'
+      type: object
+    ModelsListAllModelsResponse:
+      example:
+        data:
+        - attributes:
+            updated_at: 2000-01-23T04:56:07.000+00:00
+            query: query
+            name: name
+            connector_id: 0
+            description: description
+            created_at: 2000-01-23T04:56:07.000+00:00
+            query_type: query_type
+            primary_key: primary_key
+          id: id
+          type: type
+        - attributes:
+            updated_at: 2000-01-23T04:56:07.000+00:00
+            query: query
+            name: name
+            connector_id: 0
+            description: description
+            created_at: 2000-01-23T04:56:07.000+00:00
+            query_type: query_type
+            primary_key: primary_key
+          id: id
+          type: type
+        links:
+          next: next
+          last: last
+          prev: prev
+          self: self
+          first: first
+      properties:
+        data:
+          items:
+            $ref: '#/components/schemas/ModelsListAllModelsResponse_data_inner'
+          type: array
+        links:
+          $ref: '#/components/schemas/ModelsListAllModelsResponse_links'
+      type: object
+      x-konfig-is-used-in-successful-response: true
+    ModelsCreateModelResponse:
+      example:
+        data:
+          attributes:
+            updated_at: 2000-01-23T04:56:07.000+00:00
+            query: query
+            name: name
+            connector_id: 0
+            description: description
+            created_at: 2000-01-23T04:56:07.000+00:00
+            query_type: query_type
+            primary_key: primary_key
+          id: id
+          type: type
+      properties:
+        data:
+          $ref: '#/components/schemas/ModelsListAllModelsResponse_data_inner'
+      type: object
+      x-konfig-is-used-in-successful-response: true
+    ModelsGetByIdResponse:
+      example:
+        data:
+          attributes:
+            updated_at: 2000-01-23T04:56:07.000+00:00
+            query: query
+            name: name
+            connector_id: 0
+            description: description
+            created_at: 2000-01-23T04:56:07.000+00:00
+            query_type: query_type
+            primary_key: primary_key
+          id: id
+          type: type
+      properties:
+        data:
+          $ref: '#/components/schemas/ModelsListAllModelsResponse_data_inner'
+      type: object
+      x-konfig-is-used-in-successful-response: true
+    ModelsUpdateModelByIdResponse:
+      example:
+        data:
+          attributes:
+            updated_at: 2000-01-23T04:56:07.000+00:00
+            query: query
+            name: name
+            connector_id: 0
+            description: description
+            created_at: 2000-01-23T04:56:07.000+00:00
+            query_type: query_type
+            primary_key: primary_key
+          id: id
+          type: type
+      properties:
+        data:
+          $ref: '#/components/schemas/ModelsListAllModelsResponse_data_inner'
+      type: object
+      x-konfig-is-used-in-successful-response: true
+    ConnectorDefinitionsGetBasedOnTypeResponse:
+      items:
+        $ref: '#/components/schemas/ConnectorDefinitionsGetBasedOnTypeResponse_inner'
+      type: array
+      x-konfig-is-used-in-successful-response: true
+    ConnectorDefinitionsGetByNameResponse:
+      additionalProperties: true
+      example:
+        license: license
+        connector_subtype: connector_subtype
+        release_stage: release_stage
+        name: name
+        connector_type: connector_type
+        icon: icon
+        connector_spec:
+          stream_type: stream_type
+          supports_normalization: true
+          supports_dbt: true
+          documentation_url: documentation_url
+          connection_specification:
+            key: ""
+        support_level: support_level
+        documentation_url: documentation_url
+        github_issue_label: github_issue_label
+        tags:
+        - tags
+        - tags
+      properties:
+        tags:
+          items:
+            type: string
+          type: array
+        name:
+          type: string
+        connector_type:
+          type: string
+        connector_subtype:
+          type: string
+        documentation_url:
+          type: string
+        github_issue_label:
+          type: string
+        icon:
+          type: string
+        license:
+          type: string
+        release_stage:
+          type: string
+        support_level:
+          type: string
+        connector_spec:
+          $ref: '#/components/schemas/ConnectorDefinitionsGetByNameResponse_connector_spec'
+      type: object
+      x-konfig-is-used-in-successful-response: true
+    ConnectorDefinitionsCheckConnectionResponse:
+      example:
+        result: success
+        details: details
+      properties:
+        result:
+          enum:
+          - success
+          - failure
+          type: string
+        details:
+          type: string
+      type: object
+      x-konfig-is-used-in-successful-response: true
+    ConnectorsListAllResponse:
+      example:
+        data:
+        - attributes:
+            workspace_id: 0
+            updated_at: 2000-01-23T04:56:07.000+00:00
+            configuration:
+              key: ""
+            name: name
+            connector_type: connector_type
+            icon: icon
+            created_at: 2000-01-23T04:56:07.000+00:00
+            connector_name: connector_name
+          id: id
+          type: type
+        - attributes:
+            workspace_id: 0
+            updated_at: 2000-01-23T04:56:07.000+00:00
+            configuration:
+              key: ""
+            name: name
+            connector_type: connector_type
+            icon: icon
+            created_at: 2000-01-23T04:56:07.000+00:00
+            connector_name: connector_name
+          id: id
+          type: type
+        links:
+          next: next
+          last: last
+          prev: prev
+          self: self
+          first: first
+      properties:
+        data:
+          items:
+            $ref: '#/components/schemas/ConnectorsListAllResponse_data_inner'
+          type: array
+        links:
+          $ref: '#/components/schemas/ModelsListAllModelsResponse_links'
+      type: object
+      x-konfig-is-used-in-successful-response: true
+    ConnectorsCreateNewConnectorResponse:
+      example:
+        data:
+          attributes:
+            workspace_id: 0
+            updated_at: 2000-01-23T04:56:07.000+00:00
+            configuration:
+              key: ""
+            name: name
+            connector_type: connector_type
+            icon: icon
+            created_at: 2000-01-23T04:56:07.000+00:00
+            connector_name: connector_name
+          id: id
+          type: type
+      properties:
+        data:
+          $ref: '#/components/schemas/ConnectorsCreateNewConnectorResponse_data'
+      type: object
+      x-konfig-is-used-in-successful-response: true
+    ConnectorsGetByIdResponse:
+      example:
+        data:
+          attributes:
+            workspace_id: 0
+            updated_at: 2000-01-23T04:56:07.000+00:00
+            configuration:
+              key: ""
+            name: name
+            connector_type: connector_type
+            icon: icon
+            created_at: 2000-01-23T04:56:07.000+00:00
+            connector_name: connector_name
+          id: id
+          type: type
+      properties:
+        data:
+          $ref: '#/components/schemas/ConnectorsListAllResponse_data_inner'
+      type: object
+      x-konfig-is-used-in-successful-response: true
+    ConnectorsUpdateByIdResponse:
+      example:
+        data:
+          attributes:
+            workspace_id: 0
+            updated_at: 2000-01-23T04:56:07.000+00:00
+            configuration:
+              key: ""
+            name: name
+            connector_type: connector_type
+            icon: icon
+            created_at: 2000-01-23T04:56:07.000+00:00
+            connector_name: connector_name
+          id: id
+          type: type
+      properties:
+        data:
+          $ref: '#/components/schemas/ConnectorsUpdateByIdResponse_data'
+      type: object
+      x-konfig-is-used-in-successful-response: true
+    ConnectorsDiscoverCatalogInfoResponse:
+      example:
+        data:
+          attributes:
+            workspace_id: 6
+            catalog_hash: catalog_hash
+            catalog:
+              streams:
+              - json_schema:
+                  key: ""
+                name: name
+                action: action
+                request_method: request_method
+                url: url
+              - json_schema:
+                  key: ""
+                name: name
+                action: action
+                request_method: request_method
+                url: url
+            connector_id: 0
+          id: id
+          type: type
+      properties:
+        data:
+          $ref: '#/components/schemas/ConnectorsDiscoverCatalogInfoResponse_data'
+      type: object
+      x-konfig-is-used-in-successful-response: true
+    ConnectorsQuerySourceResponse:
+      items:
+        additionalProperties: true
+        type: object
+      type: array
+      x-konfig-is-used-in-successful-response: true
+    SyncsListOperationsResponse:
+      example:
+        data:
+        - attributes:
+            sync_mode: full_refresh
+            schedule_type: automated
+            stream_name: stream_name
+            configuration:
+              key: ""
+            destination_id: 6
+            sync_interval_unit: minutes
+            sync_interval: 5
+            source_id: 0
+            model_id: 1
+            status: status
+          id: id
+          type: syncs
+        - attributes:
+            sync_mode: full_refresh
+            schedule_type: automated
+            stream_name: stream_name
+            configuration:
+              key: ""
+            destination_id: 6
+            sync_interval_unit: minutes
+            sync_interval: 5
+            source_id: 0
+            model_id: 1
+            status: status
+          id: id
+          type: syncs
+        links:
+          next: https://openapi-generator.tech
+          last: https://openapi-generator.tech
+          prev: https://openapi-generator.tech
+          self: https://openapi-generator.tech
+          first: https://openapi-generator.tech
+      properties:
+        data:
+          items:
+            $ref: '#/components/schemas/SyncsListOperationsResponse_data_inner'
+          type: array
+        links:
+          $ref: '#/components/schemas/SyncsListOperationsResponse_links'
+      required:
+      - data
+      - links
+      type: object
+      x-konfig-is-used-in-successful-response: true
+    SyncsCreateNewSyncOperationResponse:
+      example:
+        attributes:
+          sync_mode: full_refresh
+          schedule_type: automated
+          stream_name: stream_name
+          configuration:
+            key: ""
+          destination_id: 6
+          sync_interval_unit: minutes
+          sync_interval: 5
+          source_id: 0
+          model_id: 1
+          status: status
+        id: id
+        type: syncs
+      properties:
+        id:
+          type: string
+        type:
+          enum:
+          - syncs
+          type: string
+        attributes:
+          $ref: '#/components/schemas/SyncsListOperationsResponse_data_inner_attributes'
+      type: object
+      x-konfig-is-used-in-successful-response: true
+    SyncsShowDetailsResponse:
+      example:
+        attributes:
+          sync_mode: full_refresh
+          schedule_type: automated
+          stream_name: stream_name
+          configuration:
+            key: ""
+          destination_id: 6
+          sync_interval_unit: minutes
+          sync_interval: 5
+          source_id: 0
+          model_id: 1
+          status: status
+        id: id
+        type: syncs
+      properties:
+        id:
+          type: string
+        type:
+          enum:
+          - syncs
+          type: string
+        attributes:
+          $ref: '#/components/schemas/SyncsListOperationsResponse_data_inner_attributes'
+      type: object
+      x-konfig-is-used-in-successful-response: true
+    SyncsUpdateSpecificSyncResponse:
+      example:
+        data:
+          attributes:
+            sync_mode: full_refresh
+            schedule_type: automated
+            stream_name: stream_name
+            configuration:
+              key: ""
+            destination_id: 6
+            sync_interval_unit: minutes
+            sync_interval: 5
+            source_id: 0
+            model_id: 1
+            status: status
+          id: id
+          type: syncs
+        success: true
+        message: message
+      properties:
+        success:
+          type: boolean
+        message:
+          type: string
+        data:
+          $ref: '#/components/schemas/SyncsListOperationsResponse_data_inner'
+      type: object
+      x-konfig-is-used-in-successful-response: true
+    SyncsGetReportDataResponse:
+      example:
+        data:
+          configurations:
+            catalog_mapping_types:
+              standard: standard
+              template:
+                filter:
+                  cast:
+                    description: description
+                    value: value
+                  regex_replace:
+                    description: description
+                    value: value
+                variable:
+                  current_timestamp:
+                    description: description
+                    type: datetime
+                    value: value
+              static:
+                number:
+                  description: description
+                  type: float
+                boolean:
+                  description: description
+                  type: boolean
+                string:
+                  description: description
+                  type: string
+                "null":
+                  description: description
+                  type: null
+      properties:
+        data:
+          $ref: '#/components/schemas/SyncsGetReportDataResponse_data'
+      type: object
+      x-konfig-is-used-in-successful-response: true
+    ReportsGetDataBasedOnTypeResponse:
+      example:
+        data:
+          sync_run_triggered:
+          - time_slice: 2024-02-19T06:25:00Z
+            total_count: 0
+            success_count: 1
+            failed_count: 6
+          - time_slice: 2024-02-19T06:25:00Z
+            total_count: 0
+            success_count: 1
+            failed_count: 6
+          total_sync_run_rows:
+          - time_slice: 2024-02-19T12:20:00Z
+            total_count: 5
+            success_count: 2
+            failed_count: 5
+          - time_slice: 2024-02-19T12:20:00Z
+            total_count: 5
+            success_count: 2
+            failed_count: 5
+      properties:
+        data:
+          $ref: '#/components/schemas/ReportsGetDataBasedOnTypeResponse_data'
+      type: object
+      x-konfig-is-used-in-successful-response: true
+    SyncRunsListBySyncIdResponse:
+      example:
+        data:
+        - attributes:
+            duration: 6.0274563
+            successful_rows: 5
+            total_query_rows: 1
+            finished_at: 2000-01-23T04:56:07.000+00:00
+            updated_at: 2000-01-23T04:56:07.000+00:00
+            failed_rows: 2
+            total_rows: 5
+            started_at: 2000-01-23T04:56:07.000+00:00
+            created_at: 2000-01-23T04:56:07.000+00:00
+            sync_id: 0
+            error: error
+            status: status
+          id: id
+          type: type
+        - attributes:
+            duration: 6.0274563
+            successful_rows: 5
+            total_query_rows: 1
+            finished_at: 2000-01-23T04:56:07.000+00:00
+            updated_at: 2000-01-23T04:56:07.000+00:00
+            failed_rows: 2
+            total_rows: 5
+            started_at: 2000-01-23T04:56:07.000+00:00
+            created_at: 2000-01-23T04:56:07.000+00:00
+            sync_id: 0
+            error: error
+            status: status
+          id: id
+          type: type
+        links:
+          next: https://openapi-generator.tech
+          last: https://openapi-generator.tech
+          prev: https://openapi-generator.tech
+          self: https://openapi-generator.tech
+          first: https://openapi-generator.tech
+      properties:
+        data:
+          items:
+            $ref: '#/components/schemas/SyncRunsListBySyncIdResponse_data_inner'
+          type: array
+        links:
+          $ref: '#/components/schemas/SyncRunsListBySyncIdResponse_links'
+      type: object
+      x-konfig-is-used-in-successful-response: true
+    SyncRunsListBySyncId404Response:
+      properties:
+        message:
+          example: Sync not found
+          type: string
+          x-konfig-original-example: Sync not found
+          x-konfig-generated-schema: konfig-generated-schema-components-schemas-SyncRunsListBySyncId404Response-properties-message
+        status:
+          example: not_found
+          type: string
+          x-konfig-original-example: not_found
+          x-konfig-generated-schema: konfig-generated-schema-components-schemas-SyncRunsListBySyncId404Response-properties-status
+      type: object
+      x-konfig-is-used-in-non-successful-response: true
+      x-do-not-generate: true
+    SyncRecordsListForSyncRunResponse:
+      example:
+        data:
+        - attributes:
+            updated_at: 2000-01-23T04:56:07.000+00:00
+            record:
+              email_address: email_address
+              last_name: last_name
+              phone_number: 5
+              id: 1
+              state: state
+              first_name: first_name
+            sync_run_id: 6
+            action: action
+            created_at: 2000-01-23T04:56:07.000+00:00
+            sync_id: 0
+            error: error
+            status: status
+          id: id
+          type: sync_records
+        - attributes:
+            updated_at: 2000-01-23T04:56:07.000+00:00
+            record:
+              email_address: email_address
+              last_name: last_name
+              phone_number: 5
+              id: 1
+              state: state
+              first_name: first_name
+            sync_run_id: 6
+            action: action
+            created_at: 2000-01-23T04:56:07.000+00:00
+            sync_id: 0
+            error: error
+            status: status
+          id: id
+          type: sync_records
+        links:
+          next: https://openapi-generator.tech
+          last: https://openapi-generator.tech
+          prev: https://openapi-generator.tech
+          self: https://openapi-generator.tech
+          first: https://openapi-generator.tech
+      properties:
+        data:
+          items:
+            $ref: '#/components/schemas/SyncRecordsListForSyncRunResponse_data_inner'
+          type: array
+        links:
+          $ref: '#/components/schemas/SyncRunsListBySyncIdResponse_links'
+      type: object
+      x-konfig-is-used-in-successful-response: true
+    SyncRecordsListForSyncRun404Response:
+      properties:
+        message:
+          example: SyncRun not found
+          type: string
+          x-konfig-original-example: SyncRun not found
+          x-konfig-generated-schema: konfig-generated-schema-components-schemas-SyncRecordsListForSyncRun404Response-properties-message
+        status:
+          example: not_found
+          type: string
+          x-konfig-original-example: not_found
+          x-konfig-generated-schema: konfig-generated-schema-components-schemas-SyncRecordsListForSyncRun404Response-properties-status
+      type: object
+      x-konfig-is-used-in-non-successful-response: true
+      x-do-not-generate: true
+    ? konfig-generated-schema-components-schemas-ReportsGetDataBasedOnTypeResponse-properties-data-properties-sync_run_triggered-items-properties-time_slice
+    : example: 2024-02-19T06:25:00.000Z
+      type: string
+      x-do-not-generate: true
+    ? konfig-generated-schema-components-schemas-ReportsGetDataBasedOnTypeResponse-properties-data-properties-total_sync_run_rows-items-properties-time_slice
+    : example: 2024-02-19T12:20:00.000Z
+      type: string
+      x-do-not-generate: true
+    konfig-generated-schema-components-schemas-SyncRunsListBySyncId404Response-properties-message:
+      example: Sync not found
+      type: string
+      x-do-not-generate: true
+    konfig-generated-schema-components-schemas-SyncRunsListBySyncId404Response-properties-status:
+      example: not_found
+      type: string
+      x-do-not-generate: true
+    konfig-generated-schema-components-schemas-SyncRecordsListForSyncRunResponse-properties-data-items-properties-type:
+      example: sync_records
+      type: string
+      x-do-not-generate: true
+    konfig-generated-schema-components-schemas-SyncRecordsListForSyncRun404Response-properties-message:
+      example: SyncRun not found
+      type: string
+      x-do-not-generate: true
+    konfig-generated-schema-components-schemas-SyncRecordsListForSyncRun404Response-properties-status:
+      example: not_found
+      type: string
+      x-do-not-generate: true
+    konfig-generated-schema-single-parameter-schema-get--api-v1-models:
+      properties: {}
+      type: object
+      x-do-not-generate: true
+      x-konfig-is-parameter: []
+    konfig-generated-schema-single-parameter-schema-post--api-v1-models:
+      properties:
+        model:
+          properties:
+            description:
+              type: string
+            name:
+              type: string
+            query:
+              type: string
+            query_type:
+              type: string
+            primary_key:
+              type: string
+            connector_id:
+              type: integer
+          required:
+          - connector_id
+          - name
+          - query
+          - query_type
+          type: object
+      type: object
+      x-do-not-generate: true
+      x-konfig-is-parameter: []
+    konfig-generated-schema-single-parameter-schema-delete--api-v1-models-id:
+      properties:
+        id:
+          type: integer
+      required:
+      - id
+      type: object
+      x-do-not-generate: true
+      x-konfig-is-parameter:
+      - id
+    konfig-generated-schema-single-parameter-schema-get--api-v1-models-id:
+      properties:
+        id:
+          type: integer
+      required:
+      - id
+      type: object
+      x-do-not-generate: true
+      x-konfig-is-parameter:
+      - id
+    konfig-generated-schema-single-parameter-schema-put--api-v1-models-id:
+      properties:
+        id:
+          type: integer
+        model:
+          properties:
+            description:
+              type: string
+            name:
+              type: string
+            query:
+              type: string
+            query_type:
+              type: string
+            primary_key:
+              type: string
+            connector_id:
+              type: integer
+          required:
+          - connector_id
+          - name
+          - query
+          - query_type
+          type: object
+      required:
+      - id
+      type: object
+      x-do-not-generate: true
+      x-konfig-is-parameter:
+      - id
+    konfig-generated-schema-single-parameter-schema-get--api-v1-connector_definitions:
+      properties:
+        type:
+          enum:
+          - source
+          - destination
+          type: string
+      required:
+      - type
+      type: object
+      x-do-not-generate: true
+      x-konfig-is-parameter:
+      - type
+    konfig-generated-schema-single-parameter-schema-get--api-v1-connector_definitions-connector_name:
+      properties:
+        connector_name:
+          type: string
+        type:
+          enum:
+          - source
+          - destination
+          type: string
+      required:
+      - connector_name
+      - type
+      type: object
+      x-do-not-generate: true
+      x-konfig-is-parameter:
+      - connector_name
+      - type
+    konfig-generated-schema-single-parameter-schema-post--api-v1-connector_definitions-check_connection:
+      properties:
+        type:
+          enum:
+          - source
+          - destination
+          type: string
+        name:
+          type: string
+        connection_spec:
+          additionalProperties: true
+          description: Generic connection specification structure. Specifics depend
+            on the connector type.
+          type: object
+      type: object
+      x-do-not-generate: true
+      x-konfig-is-parameter: []
+    konfig-generated-schema-single-parameter-schema-get--api-v1-connectors:
+      properties: {}
+      type: object
+      x-do-not-generate: true
+      x-konfig-is-parameter: []
+    konfig-generated-schema-single-parameter-schema-post--api-v1-connectors:
+      properties:
+        connector:
+          properties:
+            name:
+              type: string
+            connector_type:
+              enum:
+              - source
+              - destination
+              type: string
+            connector_name:
+              type: string
+            configuration:
+              additionalProperties: true
+              description: Configuration details for the connector. Structure depends
+                on the connector definition.
+              type: object
+          required:
+          - configuration
+          - connector_name
+          - connector_type
+          - name
+          type: object
+      type: object
+      x-do-not-generate: true
+      x-konfig-is-parameter: []
+    konfig-generated-schema-single-parameter-schema-delete--api-v1-connectors-id:
+      properties:
+        id:
+          type: string
+      required:
+      - id
+      type: object
+      x-do-not-generate: true
+      x-konfig-is-parameter:
+      - id
+    konfig-generated-schema-single-parameter-schema-get--api-v1-connectors-id:
+      properties:
+        id:
+          type: string
+      required:
+      - id
+      type: object
+      x-do-not-generate: true
+      x-konfig-is-parameter:
+      - id
+    konfig-generated-schema-single-parameter-schema-put--api-v1-connectors-id:
+      properties:
+        id:
+          type: string
+        connector:
+          properties:
+            name:
+              type: string
+            connector_type:
+              enum:
+              - source
+              - destination
+              type: string
+            configuration:
+              additionalProperties: true
+              description: Generic configuration structure. Specifics depend on the
+                connector type.
+              type: object
+            connector_name:
+              type: string
+          required:
+          - configuration
+          - connector_name
+          - connector_type
+          - name
+          type: object
+      required:
+      - id
+      type: object
+      x-do-not-generate: true
+      x-konfig-is-parameter:
+      - id
+    konfig-generated-schema-single-parameter-schema-get--api-v1-connectors-id-discover:
+      properties:
+        id:
+          type: string
+      required:
+      - id
+      type: object
+      x-do-not-generate: true
+      x-konfig-is-parameter:
+      - id
+    konfig-generated-schema-single-parameter-schema-post--api-v1-connectors-id-query_source:
+      properties:
+        id:
+          type: integer
+        query:
+          description: SQL query to be executed
+          type: string
+      required:
+      - id
+      type: object
+      x-do-not-generate: true
+      x-konfig-is-parameter:
+      - id
+    konfig-generated-schema-single-parameter-schema-get--api-v1-syncs:
+      properties:
+        page[number]:
+          type: integer
+        page[size]:
+          type: integer
+      type: object
+      x-do-not-generate: true
+      x-konfig-is-parameter:
+      - "page[number]"
+      - "page[size]"
+    konfig-generated-schema-single-parameter-schema-post--api-v1-syncs:
+      properties:
+        sync:
+          properties:
+            source_id:
+              type: integer
+            destination_id:
+              type: integer
+            model_id:
+              type: integer
+            schedule_type:
+              enum:
+              - automated
+              type: string
+            configuration:
+              additionalProperties: true
+              type: object
+            stream_name:
+              type: string
+            sync_mode:
+              enum:
+              - full_refresh
+              type: string
+            sync_interval:
+              type: integer
+            sync_interval_unit:
+              enum:
+              - minutes
+              type: string
+          required:
+          - configuration
+          - destination_id
+          - model_id
+          - schedule_type
+          - source_id
+          - stream_name
+          - sync_interval
+          - sync_interval_unit
+          - sync_mode
+          type: object
+      type: object
+      x-do-not-generate: true
+      x-konfig-is-parameter: []
+    konfig-generated-schema-single-parameter-schema-delete--api-v1-syncs-id:
+      properties:
+        id:
+          type: string
+      required:
+      - id
+      type: object
+      x-do-not-generate: true
+      x-konfig-is-parameter:
+      - id
+    konfig-generated-schema-single-parameter-schema-get--api-v1-syncs-id:
+      properties:
+        id:
+          type: string
+      required:
+      - id
+      type: object
+      x-do-not-generate: true
+      x-konfig-is-parameter:
+      - id
+    konfig-generated-schema-single-parameter-schema-put--api-v1-syncs-id:
+      properties:
+        id:
+          type: string
+        sync:
+          properties:
+            source_id:
+              type: integer
+            destination_id:
+              type: integer
+            model_id:
+              type: integer
+            schedule_type:
+              type: string
+            configuration:
+              additionalProperties: true
+              type: object
+            stream_name:
+              type: string
+            sync_mode:
+              type: string
+            sync_interval:
+              type: integer
+            sync_interval_unit:
+              type: string
+          type: object
+      required:
+      - id
+      type: object
+      x-do-not-generate: true
+      x-konfig-is-parameter:
+      - id
+    konfig-generated-schema-single-parameter-schema-get--api-v1-syncs-configurations:
+      properties: {}
+      type: object
+      x-do-not-generate: true
+      x-konfig-is-parameter: []
+    konfig-generated-schema-single-parameter-schema-get--api-v1-reports:
+      properties:
+        type:
+          enum:
+          - workspace_activity
+          type: string
+        metric:
+          enum:
+          - sync_run_triggered
+          - total_sync_run_rows
+          - all
+          type: string
+        connector_ids:
+          items:
+            type: integer
+          type: array
+        time_period:
+          enum:
+          - one_week
+          - one_day
+          type: string
+      required:
+      - type
+      type: object
+      x-do-not-generate: true
+      x-konfig-is-parameter:
+      - type
+      - metric
+      - connector_ids
+      - time_period
+    konfig-generated-schema-single-parameter-schema-get--api-v1-syncs-sync_id-sync_runs:
+      properties:
+        sync_id:
+          type: integer
+        status:
+          type: string
+        page:
+          type: integer
+      required:
+      - sync_id
+      type: object
+      x-do-not-generate: true
+      x-konfig-is-parameter:
+      - sync_id
+      - status
+      - page
+    konfig-generated-schema-single-parameter-schema-get--api-v1-syncs-sync_id-sync_runs-sync_run_id-sync_records:
+      properties:
+        sync_id:
+          type: integer
+        sync_run_id:
+          type: integer
+        status:
+          type: string
+        page:
+          type: integer
+      required:
+      - sync_id
+      - sync_run_id
+      type: object
+      x-do-not-generate: true
+      x-konfig-is-parameter:
+      - sync_id
+      - sync_run_id
+      - status
+      - page
+    ModelsCreateModelRequest_model:
+      example:
+        query: query
+        name: name
+        connector_id: 0
+        description: description
+        query_type: query_type
+        primary_key: primary_key
+      properties:
+        description:
+          type: string
+        name:
+          type: string
+        query:
+          type: string
+        query_type:
+          type: string
+        primary_key:
+          type: string
+        connector_id:
+          type: integer
+      required:
+      - connector_id
+      - name
+      - query
+      - query_type
+      type: object
+    ConnectorsCreateNewConnectorRequest_connector:
+      example:
+        configuration:
+          key: ""
+        name: name
+        connector_type: source
+        connector_name: connector_name
+      properties:
+        name:
+          type: string
+        connector_type:
+          enum:
+          - source
+          - destination
+          type: string
+        connector_name:
+          type: string
+        configuration:
+          additionalProperties: true
+          description: Configuration details for the connector. Structure depends
+            on the connector definition.
+          type: object
+      required:
+      - configuration
+      - connector_name
+      - connector_type
+      - name
+      type: object
+    ConnectorsUpdateByIdRequest_connector:
+      example:
+        configuration:
+          key: ""
+        name: name
+        connector_type: source
+        connector_name: connector_name
+      properties:
+        name:
+          type: string
+        connector_type:
+          enum:
+          - source
+          - destination
+          type: string
+        configuration:
+          additionalProperties: true
+          description: Generic configuration structure. Specifics depend on the connector
+            type.
+          type: object
+        connector_name:
+          type: string
+      required:
+      - configuration
+      - connector_name
+      - connector_type
+      - name
+      type: object
+    SyncsCreateNewSyncOperationRequest_sync:
+      example:
+        sync_mode: full_refresh
+        schedule_type: automated
+        stream_name: stream_name
+        configuration:
+          key: ""
+        destination_id: 6
+        sync_interval_unit: minutes
+        sync_interval: 5
+        source_id: 0
+        model_id: 1
+      properties:
+        source_id:
+          type: integer
+        destination_id:
+          type: integer
+        model_id:
+          type: integer
+        schedule_type:
+          enum:
+          - automated
+          type: string
+        configuration:
+          additionalProperties: true
+          type: object
+        stream_name:
+          type: string
+        sync_mode:
+          enum:
+          - full_refresh
+          type: string
+        sync_interval:
+          type: integer
+        sync_interval_unit:
+          enum:
+          - minutes
+          type: string
+      required:
+      - configuration
+      - destination_id
+      - model_id
+      - schedule_type
+      - source_id
+      - stream_name
+      - sync_interval
+      - sync_interval_unit
+      - sync_mode
+      type: object
+    SyncsUpdateSpecificSyncRequest_sync:
+      example:
+        sync_mode: sync_mode
+        schedule_type: schedule_type
+        stream_name: stream_name
+        configuration:
+          key: ""
+        destination_id: 6
+        sync_interval_unit: sync_interval_unit
+        sync_interval: 5
+        source_id: 0
+        model_id: 1
+      properties:
+        source_id:
+          type: integer
+        destination_id:
+          type: integer
+        model_id:
+          type: integer
+        schedule_type:
+          type: string
+        configuration:
+          additionalProperties: true
+          type: object
+        stream_name:
+          type: string
+        sync_mode:
+          type: string
+        sync_interval:
+          type: integer
+        sync_interval_unit:
+          type: string
+      type: object
+    ModelsListAllModelsResponse_data_inner_attributes:
+      example:
+        updated_at: 2000-01-23T04:56:07.000+00:00
+        query: query
+        name: name
+        connector_id: 0
+        description: description
+        created_at: 2000-01-23T04:56:07.000+00:00
+        query_type: query_type
+        primary_key: primary_key
+      properties:
+        description:
+          type: string
+        name:
+          type: string
+        query:
+          type: string
+        query_type:
+          type: string
+        primary_key:
+          type: string
+        connector_id:
+          type: integer
+        created_at:
+          format: date-time
+          type: string
+        updated_at:
+          format: date-time
+          type: string
+      type: object
+    ModelsListAllModelsResponse_data_inner:
+      example:
+        attributes:
+          updated_at: 2000-01-23T04:56:07.000+00:00
+          query: query
+          name: name
+          connector_id: 0
+          description: description
+          created_at: 2000-01-23T04:56:07.000+00:00
+          query_type: query_type
+          primary_key: primary_key
+        id: id
+        type: type
+      properties:
+        id:
+          type: string
+        type:
+          type: string
+        attributes:
+          $ref: '#/components/schemas/ModelsListAllModelsResponse_data_inner_attributes'
+      type: object
+    ModelsListAllModelsResponse_links:
+      example:
+        next: next
+        last: last
+        prev: prev
+        self: self
+        first: first
+      properties:
+        self:
+          type: string
+        first:
+          type: string
+        prev:
+          type: string
+        next:
+          type: string
+        last:
+          type: string
+      type: object
+    ConnectorDefinitionsGetBasedOnTypeResponse_inner_connector_spec:
+      example:
+        documentation_url: documentation_url
+        connection_specification:
+          key: ""
+      properties:
+        documentation_url:
+          type: string
+        connection_specification:
+          additionalProperties: true
+          type: object
+      type: object
+    ConnectorDefinitionsGetBasedOnTypeResponse_inner:
+      example:
+        license: license
+        connector_subtype: connector_subtype
+        release_stage: release_stage
+        name: name
+        connector_type: connector_type
+        icon: icon
+        connector_spec:
+          documentation_url: documentation_url
+          connection_specification:
+            key: ""
+        support_level: support_level
+        documentation_url: documentation_url
+        github_issue_label: github_issue_label
+        tags:
+        - tags
+        - tags
+      properties:
+        tags:
+          items:
+            type: string
+          type: array
+        name:
+          type: string
+        connector_type:
+          type: string
+        connector_subtype:
+          type: string
+        documentation_url:
+          type: string
+        github_issue_label:
+          type: string
+        icon:
+          type: string
+        license:
+          type: string
+        release_stage:
+          type: string
+        support_level:
+          type: string
+        connector_spec:
+          $ref: '#/components/schemas/ConnectorDefinitionsGetBasedOnTypeResponse_inner_connector_spec'
+      type: object
+    ConnectorDefinitionsGetByNameResponse_connector_spec:
+      example:
+        stream_type: stream_type
+        supports_normalization: true
+        supports_dbt: true
+        documentation_url: documentation_url
+        connection_specification:
+          key: ""
+      properties:
+        documentation_url:
+          type: string
+        connection_specification:
+          additionalProperties: true
+          type: object
+        supports_normalization:
+          type: boolean
+        supports_dbt:
+          type: boolean
+        stream_type:
+          type: string
+      type: object
+    ConnectorsListAllResponse_data_inner_attributes:
+      example:
+        workspace_id: 0
+        updated_at: 2000-01-23T04:56:07.000+00:00
+        configuration:
+          key: ""
+        name: name
+        connector_type: connector_type
+        icon: icon
+        created_at: 2000-01-23T04:56:07.000+00:00
+        connector_name: connector_name
+      properties:
+        name:
+          type: string
+        connector_type:
+          type: string
+        workspace_id:
+          type: integer
+        created_at:
+          format: date-time
+          type: string
+        updated_at:
+          format: date-time
+          type: string
+        configuration:
+          additionalProperties: true
+          description: Generic configuration for the connector. Structure varies based
+            on the connector_type.
+          type: object
+        connector_name:
+          type: string
+        icon:
+          type: string
+      type: object
+    ConnectorsListAllResponse_data_inner:
+      example:
+        attributes:
+          workspace_id: 0
+          updated_at: 2000-01-23T04:56:07.000+00:00
+          configuration:
+            key: ""
+          name: name
+          connector_type: connector_type
+          icon: icon
+          created_at: 2000-01-23T04:56:07.000+00:00
+          connector_name: connector_name
+        id: id
+        type: type
+      properties:
+        id:
+          type: string
+        type:
+          type: string
+        attributes:
+          $ref: '#/components/schemas/ConnectorsListAllResponse_data_inner_attributes'
+      type: object
+    ConnectorsCreateNewConnectorResponse_data_attributes:
+      example:
+        workspace_id: 0
+        updated_at: 2000-01-23T04:56:07.000+00:00
+        configuration:
+          key: ""
+        name: name
+        connector_type: connector_type
+        icon: icon
+        created_at: 2000-01-23T04:56:07.000+00:00
+        connector_name: connector_name
+      properties:
+        name:
+          type: string
+        connector_type:
+          type: string
+        workspace_id:
+          type: integer
+        created_at:
+          format: date-time
+          type: string
+        updated_at:
+          format: date-time
+          type: string
+        configuration:
+          additionalProperties: true
+          description: Specific configuration of the created connector.
+          type: object
+        connector_name:
+          type: string
+        icon:
+          type: string
+      type: object
+    ConnectorsCreateNewConnectorResponse_data:
+      example:
+        attributes:
+          workspace_id: 0
+          updated_at: 2000-01-23T04:56:07.000+00:00
+          configuration:
+            key: ""
+          name: name
+          connector_type: connector_type
+          icon: icon
+          created_at: 2000-01-23T04:56:07.000+00:00
+          connector_name: connector_name
+        id: id
+        type: type
+      properties:
+        id:
+          type: string
+        type:
+          type: string
+        attributes:
+          $ref: '#/components/schemas/ConnectorsCreateNewConnectorResponse_data_attributes'
+      type: object
+    ConnectorsUpdateByIdResponse_data_attributes:
+      example:
+        workspace_id: 0
+        updated_at: 2000-01-23T04:56:07.000+00:00
+        configuration:
+          key: ""
+        name: name
+        connector_type: connector_type
+        icon: icon
+        created_at: 2000-01-23T04:56:07.000+00:00
+        connector_name: connector_name
+      properties:
+        name:
+          type: string
+        connector_type:
+          type: string
+        workspace_id:
+          type: integer
+        created_at:
+          format: date-time
+          type: string
+        updated_at:
+          format: date-time
+          type: string
+        configuration:
+          additionalProperties: true
+          description: Specific configuration of the updated connector.
+          type: object
+        connector_name:
+          type: string
+        icon:
+          type: string
+      type: object
+    ConnectorsUpdateByIdResponse_data:
+      example:
+        attributes:
+          workspace_id: 0
+          updated_at: 2000-01-23T04:56:07.000+00:00
+          configuration:
+            key: ""
+          name: name
+          connector_type: connector_type
+          icon: icon
+          created_at: 2000-01-23T04:56:07.000+00:00
+          connector_name: connector_name
+        id: id
+        type: type
+      properties:
+        id:
+          type: string
+        type:
+          type: string
+        attributes:
+          $ref: '#/components/schemas/ConnectorsUpdateByIdResponse_data_attributes'
+      type: object
+    ConnectorsDiscoverCatalogInfoResponse_data_attributes_catalog_streams_inner:
+      example:
+        json_schema:
+          key: ""
+        name: name
+        action: action
+        request_method: request_method
+        url: url
+      properties:
+        name:
+          type: string
+        action:
+          type: string
+        json_schema:
+          additionalProperties: true
+          type: object
+        url:
+          type: string
+        request_method:
+          type: string
+      type: object
+    ConnectorsDiscoverCatalogInfoResponse_data_attributes_catalog:
+      example:
+        streams:
+        - json_schema:
+            key: ""
+          name: name
+          action: action
+          request_method: request_method
+          url: url
+        - json_schema:
+            key: ""
+          name: name
+          action: action
+          request_method: request_method
+          url: url
+      properties:
+        streams:
+          description: "Array of stream objects, varying based on connector ID."
+          items:
+            $ref: '#/components/schemas/ConnectorsDiscoverCatalogInfoResponse_data_attributes_catalog_streams_inner'
+          type: array
+      type: object
+    ConnectorsDiscoverCatalogInfoResponse_data_attributes:
+      example:
+        workspace_id: 6
+        catalog_hash: catalog_hash
+        catalog:
+          streams:
+          - json_schema:
+              key: ""
+            name: name
+            action: action
+            request_method: request_method
+            url: url
+          - json_schema:
+              key: ""
+            name: name
+            action: action
+            request_method: request_method
+            url: url
+        connector_id: 0
+      properties:
+        connector_id:
+          type: integer
+        workspace_id:
+          type: integer
+        catalog:
+          $ref: '#/components/schemas/ConnectorsDiscoverCatalogInfoResponse_data_attributes_catalog'
+        catalog_hash:
+          type: string
+      type: object
+    ConnectorsDiscoverCatalogInfoResponse_data:
+      example:
+        attributes:
+          workspace_id: 6
+          catalog_hash: catalog_hash
+          catalog:
+            streams:
+            - json_schema:
+                key: ""
+              name: name
+              action: action
+              request_method: request_method
+              url: url
+            - json_schema:
+                key: ""
+              name: name
+              action: action
+              request_method: request_method
+              url: url
+          connector_id: 0
+        id: id
+        type: type
+      properties:
+        id:
+          type: string
+        type:
+          type: string
+        attributes:
+          $ref: '#/components/schemas/ConnectorsDiscoverCatalogInfoResponse_data_attributes'
+      type: object
+    SyncsListOperationsResponse_data_inner_attributes:
+      example:
+        sync_mode: full_refresh
+        schedule_type: automated
+        stream_name: stream_name
+        configuration:
+          key: ""
+        destination_id: 6
+        sync_interval_unit: minutes
+        sync_interval: 5
+        source_id: 0
+        model_id: 1
+        status: status
+      properties:
+        source_id:
+          type: integer
+        destination_id:
+          type: integer
+        model_id:
+          type: integer
+        configuration:
+          additionalProperties: true
+          type: object
+        schedule_type:
+          enum:
+          - automated
+          type: string
+        sync_mode:
+          enum:
+          - full_refresh
+          type: string
+        sync_interval:
+          type: integer
+        sync_interval_unit:
+          enum:
+          - minutes
+          type: string
+        stream_name:
+          type: string
+        status:
+          type: string
+      type: object
+    SyncsListOperationsResponse_data_inner:
+      example:
+        attributes:
+          sync_mode: full_refresh
+          schedule_type: automated
+          stream_name: stream_name
+          configuration:
+            key: ""
+          destination_id: 6
+          sync_interval_unit: minutes
+          sync_interval: 5
+          source_id: 0
+          model_id: 1
+          status: status
+        id: id
+        type: syncs
+      properties:
+        id:
+          type: string
+        type:
+          enum:
+          - syncs
+          type: string
+        attributes:
+          $ref: '#/components/schemas/SyncsListOperationsResponse_data_inner_attributes'
+      type: object
+    SyncsListOperationsResponse_links:
+      example:
+        next: https://openapi-generator.tech
+        last: https://openapi-generator.tech
+        prev: https://openapi-generator.tech
+        self: https://openapi-generator.tech
+        first: https://openapi-generator.tech
+      properties:
+        self:
+          format: uri
+          type: string
+        first:
+          format: uri
+          type: string
+        prev:
+          format: uri
+          type: string
+        next:
+          format: uri
+          type: string
+        last:
+          format: uri
+          type: string
+      type: object
+    SyncsGetReportDataResponse_data_configurations_catalog_mapping_types_static_string:
+      description: Details for string type within static mapping.
+      example:
+        description: description
+        type: string
+      properties:
+        description:
+          description: Description of the string field.
+          type: string
+        type:
+          description: Data type for string field.
+          enum:
+          - string
+          type: string
+      type: object
+    SyncsGetReportDataResponse_data_configurations_catalog_mapping_types_static_number:
+      description: Details for number type within static mapping.
+      example:
+        description: description
+        type: float
+      properties:
+        description:
+          description: Description of the number field.
+          type: string
+        type:
+          description: Data type for number field.
+          enum:
+          - float
+          type: string
+      type: object
+    SyncsGetReportDataResponse_data_configurations_catalog_mapping_types_static_boolean:
+      description: Details for boolean type within static mapping.
+      example:
+        description: description
+        type: boolean
+      properties:
+        description:
+          description: Description of the boolean field.
+          type: string
+        type:
+          description: Data type for boolean field.
+          enum:
+          - boolean
+          type: string
+      type: object
+    SyncsGetReportDataResponse_data_configurations_catalog_mapping_types_static_null:
+      description: Details for null type within static mapping.
+      example:
+        description: description
+        type: null
+      properties:
+        description:
+          description: Description of the null field.
+          type: string
+        type:
+          description: Data type for null field.
+          enum:
+          - null
+          type: string
+      type: object
+    SyncsGetReportDataResponse_data_configurations_catalog_mapping_types_static:
+      description: Details for static mapping type.
+      example:
+        number:
+          description: description
+          type: float
+        boolean:
+          description: description
+          type: boolean
+        string:
+          description: description
+          type: string
+        "null":
+          description: description
+          type: null
+      properties:
+        string:
+          $ref: '#/components/schemas/SyncsGetReportDataResponse_data_configurations_catalog_mapping_types_static_string'
+        number:
+          $ref: '#/components/schemas/SyncsGetReportDataResponse_data_configurations_catalog_mapping_types_static_number'
+        boolean:
+          $ref: '#/components/schemas/SyncsGetReportDataResponse_data_configurations_catalog_mapping_types_static_boolean'
+        "null":
+          $ref: '#/components/schemas/SyncsGetReportDataResponse_data_configurations_catalog_mapping_types_static_null'
+      type: object
+    SyncsGetReportDataResponse_data_configurations_catalog_mapping_types_template_variable_current_timestamp:
+      description: Details for current_timestamp variable.
+      example:
+        description: description
+        type: datetime
+        value: value
+      properties:
+        description:
+          description: Description of the current_timestamp variable.
+          type: string
+        type:
+          description: Data type for current_timestamp variable.
+          enum:
+          - datetime
+          type: string
+        value:
+          description: Expression to generate current timestamp.
+          type: string
+      type: object
+    SyncsGetReportDataResponse_data_configurations_catalog_mapping_types_template_variable:
+      description: Details for variables within template mapping.
+      example:
+        current_timestamp:
+          description: description
+          type: datetime
+          value: value
+      properties:
+        current_timestamp:
+          $ref: '#/components/schemas/SyncsGetReportDataResponse_data_configurations_catalog_mapping_types_template_variable_current_timestamp'
+      type: object
+    SyncsGetReportDataResponse_data_configurations_catalog_mapping_types_template_filter_cast:
+      description: Details for cast filter.
+      example:
+        description: description
+        value: value
+      properties:
+        description:
+          description: Description of the cast filter.
+          type: string
+        value:
+          description: Expression to cast value to specified type.
+          type: string
+      type: object
+    SyncsGetReportDataResponse_data_configurations_catalog_mapping_types_template_filter_regex_replace:
+      description: Details for regex_replace filter.
+      example:
+        description: description
+        value: value
+      properties:
+        description:
+          description: Description of the regex_replace filter.
+          type: string
+        value:
+          description: Expression to perform regex replace operation.
+          type: string
+      type: object
+    SyncsGetReportDataResponse_data_configurations_catalog_mapping_types_template_filter:
+      description: Details for filters within template mapping.
+      example:
+        cast:
+          description: description
+          value: value
+        regex_replace:
+          description: description
+          value: value
+      properties:
+        cast:
+          $ref: '#/components/schemas/SyncsGetReportDataResponse_data_configurations_catalog_mapping_types_template_filter_cast'
+        regex_replace:
+          $ref: '#/components/schemas/SyncsGetReportDataResponse_data_configurations_catalog_mapping_types_template_filter_regex_replace'
+      type: object
+    SyncsGetReportDataResponse_data_configurations_catalog_mapping_types_template:
+      description: Details for template mapping type.
+      example:
+        filter:
+          cast:
+            description: description
+            value: value
+          regex_replace:
+            description: description
+            value: value
+        variable:
+          current_timestamp:
+            description: description
+            type: datetime
+            value: value
+      properties:
+        variable:
+          $ref: '#/components/schemas/SyncsGetReportDataResponse_data_configurations_catalog_mapping_types_template_variable'
+        filter:
+          $ref: '#/components/schemas/SyncsGetReportDataResponse_data_configurations_catalog_mapping_types_template_filter'
+      type: object
+    SyncsGetReportDataResponse_data_configurations_catalog_mapping_types:
+      description: Mapping types for catalog data.
+      example:
+        standard: standard
+        template:
+          filter:
+            cast:
+              description: description
+              value: value
+            regex_replace:
+              description: description
+              value: value
+          variable:
+            current_timestamp:
+              description: description
+              type: datetime
+              value: value
+        static:
+          number:
+            description: description
+            type: float
+          boolean:
+            description: description
+            type: boolean
+          string:
+            description: description
+            type: string
+          "null":
+            description: description
+            type: null
+      properties:
+        standard:
+          description: Details for standard mapping type (currently empty).
+          type: string
+        static:
+          $ref: '#/components/schemas/SyncsGetReportDataResponse_data_configurations_catalog_mapping_types_static'
+        template:
+          $ref: '#/components/schemas/SyncsGetReportDataResponse_data_configurations_catalog_mapping_types_template'
+      type: object
+    SyncsGetReportDataResponse_data_configurations:
+      description: Configuration details.
+      example:
+        catalog_mapping_types:
+          standard: standard
+          template:
+            filter:
+              cast:
+                description: description
+                value: value
+              regex_replace:
+                description: description
+                value: value
+            variable:
+              current_timestamp:
+                description: description
+                type: datetime
+                value: value
+          static:
+            number:
+              description: description
+              type: float
+            boolean:
+              description: description
+              type: boolean
+            string:
+              description: description
+              type: string
+            "null":
+              description: description
+              type: null
+      properties:
+        catalog_mapping_types:
+          $ref: '#/components/schemas/SyncsGetReportDataResponse_data_configurations_catalog_mapping_types'
+      type: object
+    SyncsGetReportDataResponse_data:
+      description: Data object containing configuration details.
+      example:
+        configurations:
+          catalog_mapping_types:
+            standard: standard
+            template:
+              filter:
+                cast:
+                  description: description
+                  value: value
+                regex_replace:
+                  description: description
+                  value: value
+              variable:
+                current_timestamp:
+                  description: description
+                  type: datetime
+                  value: value
+            static:
+              number:
+                description: description
+                type: float
+              boolean:
+                description: description
+                type: boolean
+              string:
+                description: description
+                type: string
+              "null":
+                description: description
+                type: null
+      properties:
+        configurations:
+          $ref: '#/components/schemas/SyncsGetReportDataResponse_data_configurations'
+      type: object
+    ReportsGetDataBasedOnTypeResponse_data_sync_run_triggered_inner:
+      example:
+        time_slice: 2024-02-19T06:25:00Z
+        total_count: 0
+        success_count: 1
+        failed_count: 6
+      properties:
+        time_slice:
+          example: 2024-02-19T06:25:00Z
+          format: date-time
+          type: string
+          x-konfig-original-example: 2024-02-19T06:25:00.000Z
+          x-konfig-generated-schema: konfig-generated-schema-components-schemas-ReportsGetDataBasedOnTypeResponse-properties-data-properties-sync_run_triggered-items-properties-time_slice
+        total_count:
+          type: integer
+        failed_count:
+          type: integer
+        success_count:
+          type: integer
+      type: object
+    ReportsGetDataBasedOnTypeResponse_data_total_sync_run_rows_inner:
+      example:
+        time_slice: 2024-02-19T12:20:00Z
+        total_count: 5
+        success_count: 2
+        failed_count: 5
+      properties:
+        time_slice:
+          example: 2024-02-19T12:20:00Z
+          format: date-time
+          type: string
+          x-konfig-original-example: 2024-02-19T12:20:00.000Z
+          x-konfig-generated-schema: konfig-generated-schema-components-schemas-ReportsGetDataBasedOnTypeResponse-properties-data-properties-total_sync_run_rows-items-properties-time_slice
+        total_count:
+          type: integer
+        failed_count:
+          type: integer
+        success_count:
+          type: integer
+      type: object
+    ReportsGetDataBasedOnTypeResponse_data:
+      example:
+        sync_run_triggered:
+        - time_slice: 2024-02-19T06:25:00Z
+          total_count: 0
+          success_count: 1
+          failed_count: 6
+        - time_slice: 2024-02-19T06:25:00Z
+          total_count: 0
+          success_count: 1
+          failed_count: 6
+        total_sync_run_rows:
+        - time_slice: 2024-02-19T12:20:00Z
+          total_count: 5
+          success_count: 2
+          failed_count: 5
+        - time_slice: 2024-02-19T12:20:00Z
+          total_count: 5
+          success_count: 2
+          failed_count: 5
+      properties:
+        sync_run_triggered:
+          items:
+            $ref: '#/components/schemas/ReportsGetDataBasedOnTypeResponse_data_sync_run_triggered_inner'
+          type: array
+        total_sync_run_rows:
+          items:
+            $ref: '#/components/schemas/ReportsGetDataBasedOnTypeResponse_data_total_sync_run_rows_inner'
+          type: array
+      type: object
+    SyncRunsListBySyncIdResponse_data_inner_attributes:
+      example:
+        duration: 6.0274563
+        successful_rows: 5
+        total_query_rows: 1
+        finished_at: 2000-01-23T04:56:07.000+00:00
+        updated_at: 2000-01-23T04:56:07.000+00:00
+        failed_rows: 2
+        total_rows: 5
+        started_at: 2000-01-23T04:56:07.000+00:00
+        created_at: 2000-01-23T04:56:07.000+00:00
+        sync_id: 0
+        error: error
+        status: status
+      properties:
+        sync_id:
+          type: integer
+        status:
+          type: string
+        started_at:
+          format: date-time
+          type: string
+        finished_at:
+          format: date-time
+          type: string
+        duration:
+          format: float
+          type: number
+        total_query_rows:
+          type: integer
+        total_rows:
+          type: integer
+        successful_rows:
+          type: integer
+        failed_rows:
+          type: integer
+        error:
+          nullable: true
+          type: string
+        created_at:
+          format: date-time
+          type: string
+        updated_at:
+          format: date-time
+          type: string
+      type: object
+    SyncRunsListBySyncIdResponse_data_inner:
+      example:
+        attributes:
+          duration: 6.0274563
+          successful_rows: 5
+          total_query_rows: 1
+          finished_at: 2000-01-23T04:56:07.000+00:00
+          updated_at: 2000-01-23T04:56:07.000+00:00
+          failed_rows: 2
+          total_rows: 5
+          started_at: 2000-01-23T04:56:07.000+00:00
+          created_at: 2000-01-23T04:56:07.000+00:00
+          sync_id: 0
+          error: error
+          status: status
+        id: id
+        type: type
+      properties:
+        id:
+          type: string
+        type:
+          type: string
+        attributes:
+          $ref: '#/components/schemas/SyncRunsListBySyncIdResponse_data_inner_attributes'
+      type: object
+    SyncRunsListBySyncIdResponse_links:
+      example:
+        next: https://openapi-generator.tech
+        last: https://openapi-generator.tech
+        prev: https://openapi-generator.tech
+        self: https://openapi-generator.tech
+        first: https://openapi-generator.tech
+      properties:
+        self:
+          format: uri
+          type: string
+        first:
+          format: uri
+          type: string
+        prev:
+          format: uri
+          nullable: true
+          type: string
+        next:
+          format: uri
+          nullable: true
+          type: string
+        last:
+          format: uri
+          type: string
+      type: object
+    SyncRecordsListForSyncRunResponse_data_inner_attributes_record:
+      example:
+        email_address: email_address
+        last_name: last_name
+        phone_number: 5
+        id: 1
+        state: state
+        first_name: first_name
+      properties:
+        id:
+          type: integer
+        state:
+          type: string
+        last_name:
+          type: string
+        first_name:
+          type: string
+        phone_number:
+          type: integer
+        email_address:
+          type: string
+      type: object
+    SyncRecordsListForSyncRunResponse_data_inner_attributes:
+      example:
+        updated_at: 2000-01-23T04:56:07.000+00:00
+        record:
+          email_address: email_address
+          last_name: last_name
+          phone_number: 5
+          id: 1
+          state: state
+          first_name: first_name
+        sync_run_id: 6
+        action: action
+        created_at: 2000-01-23T04:56:07.000+00:00
+        sync_id: 0
+        error: error
+        status: status
+      properties:
+        sync_id:
+          type: integer
+        sync_run_id:
+          type: integer
+        record:
+          $ref: '#/components/schemas/SyncRecordsListForSyncRunResponse_data_inner_attributes_record'
+        status:
+          type: string
+        action:
+          type: string
+        error:
+          nullable: true
+          type: string
+        created_at:
+          format: date-time
+          type: string
+        updated_at:
+          format: date-time
+          type: string
+      type: object
+    SyncRecordsListForSyncRunResponse_data_inner:
+      example:
+        attributes:
+          updated_at: 2000-01-23T04:56:07.000+00:00
+          record:
+            email_address: email_address
+            last_name: last_name
+            phone_number: 5
+            id: 1
+            state: state
+            first_name: first_name
+          sync_run_id: 6
+          action: action
+          created_at: 2000-01-23T04:56:07.000+00:00
+          sync_id: 0
+          error: error
+          status: status
+        id: id
+        type: sync_records
+      properties:
+        id:
+          type: string
+        type:
+          example: sync_records
+          type: string
+          x-konfig-original-example: sync_records
+          x-konfig-generated-schema: konfig-generated-schema-components-schemas-SyncRecordsListForSyncRunResponse-properties-data-items-properties-type
+        attributes:
+          $ref: '#/components/schemas/SyncRecordsListForSyncRunResponse_data_inner_attributes'
+      type: object
+  securitySchemes:
+    bearerAuth:
+      bearerFormat: JWT
+      scheme: bearer
+      type: http
+      x-konfig-globally-required-security: false
+
